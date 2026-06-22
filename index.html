@@ -4,66 +4,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WebMoupeyStore — Minecraft Edition</title>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>WebMoupeyStore — Official Minecraft GUI</title>
+  <!-- Font khusus Minecraft Original (Pixel & Chat font) -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
   <style>
     /* =========================================
-       1. GLOBAL RESET & TYPOGRAPHY
+       1. MINECRAFT CORE SYSTEM & BACKGROUND
     ========================================= */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      image-rendering: pixelated; /* Memastikan ikon terlihat tajam ala pixel art */
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f3f5;
-      background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
-      background-size: 20px 20px;
-      color: #2c3e50;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .pixel-font {
       font-family: 'VT323', monospace;
-      letter-spacing: 1px;
+      font-size: 20px;
+      /* Background gradasi Biru Langit khas siang hari di Minecraft */
+      background: linear-gradient(180deg, #74b9ff 0%, #a29bfe 100%);
+      background-attachment: fixed;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Font tebal untuk judul utama */
+    .title-pixel {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      text-shadow: 3px 3px 0px #111;
+      color: #fff;
     }
 
     /* =========================================
-       2. REUSABLE COMPONENTS
+       2. REUSABLE GUI BLOCKS (3D Pixel Style)
     ========================================= */
-    .mc-block {
-      background: #ffffff;
-      border: 4px solid #4a3728; 
-      box-shadow: inset -4px -4px 0px #cbd5e1, 4px 4px 0px rgba(0, 0, 0, 0.15);
-      border-radius: 0px;
+    /* Container Utama berbentuk Box UI Item/Chest Minecraft */
+    .mc-container {
+      width: 100%;
+      max-width: 520px;
+      background: #dbdbdb; /* Putih Abu-abu khas Lapisan Dalam Inventory */
+      border: 4px solid #555555;
+      box-shadow: 
+        inset 4px 4px 0px #fff, 
+        inset -4px -4px 0px #8b8b8b, 
+        6px 6px 0px rgba(0, 0, 0, 0.2);
+      padding: 24px;
+      margin: 30px auto;
+    }
+
+    /* Slot Item untuk Foto Profil */
+    .item-slot {
+      background: #8b8b8b;
+      border: 4px solid #373737;
+      box-shadow: inset 4px 4px 0px #555, inset -4px -4px 0px #dbdbdb;
+      display: inline-block;
+      padding: 4px;
+      margin-bottom: 10px;
     }
 
     /* =========================================
-       3. HEADER
+       3. HEADER LAYOUT
     ========================================= */
     header {
       width: 100%;
-      padding: 16px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 800;
+      max-width: 520px;
+      padding: 14px 20px;
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #5c8e32;
-      border-bottom: 5px solid #3b5e1e;
+      background: #4aa3df; /* Biru Langit */
+      border: 4px solid #000;
+      box-shadow: inset -4px -4px 0px #244e74, inset 4px 4px 0px #86c5f1;
       color: #fff;
     }
 
     header .menu-icon,
     header .search-icon {
-      font-size: 28px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 18px;
       cursor: pointer;
+      text-shadow: 2px 2px 0px #000;
     }
+    header .menu-icon:hover { color: #a3ffb3; }
 
     /* =========================================
        4. SIDEBAR NAVIGATION
@@ -75,15 +103,13 @@
       width: 260px;
       height: 100vh;
       padding: 22px;
-      transition: .35s;
+      transition: .3s steps(4); /* Animasi patah-patah ala game retro */
       z-index: 999;
-      background: #4a3728;
-      border-right: 6px solid #31231a;
+      background: #2c2c2c;
+      border-right: 6px solid #141414;
     }
 
-    .sidebar.active {
-      left: 0;
-    }
+    .sidebar.active { left: 0; }
 
     .sidebar-header {
       display: flex;
@@ -91,12 +117,12 @@
       align-items: center;
       margin-bottom: 25px;
       color: #fff;
-      border-bottom: 4px solid #31231a;
+      border-bottom: 4px solid #141414;
       padding-bottom: 10px;
     }
 
-    .sidebar h2 { font-size: 28px; }
-    .close-sidebar { font-size: 32px; cursor: pointer; }
+    .sidebar h2 { font-size: 24px; }
+    .close-sidebar { font-size: 28px; cursor: pointer; }
 
     .nav-links {
       display: flex;
@@ -107,18 +133,19 @@
 
     .nav-links a {
       color: #fff;
-      padding: 12px 14px;
+      padding: 10px;
       text-decoration: none;
-      font-weight: 600;
-      background: #5c8e32;
-      border: 3px solid #3b5e1e;
+      font-size: 22px;
+      background: #555;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px #373737, inset 3px 3px 0px #8b8b8b;
       display: block;
-      transition: .15s;
+      text-align: center;
     }
 
     .nav-links a:hover {
-      background: #4ade80;
-      color: #000;
+      background: #5c8e32; /* Hijau aktif */
+      box-shadow: inset -3px -3px 0px #3b5e1e, inset 3px 3px 0px #82be4f;
     }
 
     /* =========================================
@@ -126,151 +153,161 @@
     ========================================= */
     .profile {
       text-align: center;
-      margin: 40px auto 22px;
-      max-width: 480px;
+      margin-bottom: 20px;
+      border-bottom: 4px dashed #8b8b8b;
+      padding-bottom: 18px;
     }
 
     .profile img {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
+      display: block;
       object-fit: cover;
-      border: 5px solid #00a8ff; 
-      box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15);
     }
 
-    .profile p { margin-top: 12px; font-size: 32px; color: #2c3e50; }
-    .info { font-size: 15px; font-weight: 600; margin-top: 6px; color: #64748b; }
+    .profile h1 {
+      font-size: 32px;
+      color: #111;
+      margin-top: 5px;
+    }
+
+    .info-box {
+      background: #c6c6c6;
+      border: 2px solid #777;
+      padding: 6px;
+      margin-top: 8px;
+      font-size: 18px;
+      color: #444;
+      font-weight: bold;
+    }
 
     /* =========================================
-       6. LINK LIST BUTTONS
+       6. GENUINE MINECRAFT BUTTONS (HIJAU & BIRU)
     ========================================= */
     .link-list {
-      max-width: 600px;
-      margin: 10px auto 40px;
-      padding: 0 18px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .link-item {
       display: flex;
       align-items: center;
-      padding: 14px 20px;
+      padding: 10px 14px;
       text-decoration: none;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 700;
-      gap: 16px;
-      background: linear-gradient(180deg, #00a8ff 0%, #0072ff 100%);
-      border: 4px solid #0044aa;
-      box-shadow: inset -4px -4px 0px #0044aa, 4px 4px 0px rgba(0, 0, 0, 0.15);
-      transition: transform 0.1s, background 0.1s;
+      font-size: 24px;
+      font-weight: bold;
+      gap: 14px;
+      border: 3px solid #000;
+      color: #e0e0e0;
+      text-shadow: 2px 2px 0px #222;
+      
+      /* Default: Tombol Biru Diamond */
+      background: #3c81bc;
+      box-shadow: inset -3px -3px 0px #244e74, inset 3px 3px 0px #6ba9df;
     }
 
+    /* Tombol Khusus Berwarna Hijau (Seperti Store & Fix Link) */
+    .btn-green {
+      background: #5c8e32;
+      box-shadow: inset -3px -3px 0px #3b5e1e, inset 3px 3px 0px #82be4f;
+    }
+
+    /* Efek Hover original kursor game Minecraft */
     .link-item:hover {
-      transform: translate(2px, 2px);
-      background: linear-gradient(180deg, #a3ffb3 0%, #5c8e32 100%);
-      border-color: #3b5e1e;
-      box-shadow: inset -4px -4px 0px #3b5e1e;
       color: #fff;
+      border-color: #fff;
+      text-shadow: 2px 2px 0px #000;
+      /* Berubah jadi Ungu/Biru Muda menyala saat disentuh */
+      background: #7ba4ff;
+      box-shadow: inset -3px -3px 0px #2e54b6, inset 3px 3px 0px #c1d5ff;
     }
 
     .link-item img {
-      width: 45px;
-      height: 45px;
-      border: 3px solid #fff;
+      width: 40px;
+      height: 40px;
       background: #fff;
+      border: 2px solid #000;
+      padding: 2px;
     }
 
     /* =========================================
-       7. MODAL (POP UP TOKEN)
+       7. GUI MODAL (POP UP TOKEN)
     ========================================= */
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       justify-content: center;
       align-items: center;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       z-index: 1000;
-      padding: 0 18px;
     }
 
     .modal-content {
-      width: 100%;
-      max-width: 360px;
+      width: 90%;
+      max-width: 380px;
+      background: #c6c6c6;
+      border: 4px solid #000;
+      box-shadow: inset 4px 4px 0px #fff, inset -4px -4px 0px #555;
       padding: 24px;
-      background: #cbd5e1;
-      border: 5px solid #4a3728;
-      box-shadow: 6px 6px 0px #000;
       text-align: center;
       position: relative;
-      color: #31231a;
     }
 
-    .modal-content h3 { font-size: 24px; margin-bottom: 12px; }
+    .modal-content h3 { font-size: 26px; margin-bottom: 12px; color: #111; }
 
     .modal-content input {
       width: 100%;
-      margin-top: 8px;
-      padding: 12px;
-      background: #fff;
-      border: 3px solid #4a3728;
-      color: #000;
-      font-size: 18px;
-      font-weight: 600;
+      padding: 10px;
+      background: #000;
+      border: 3px solid #a8a8a8;
+      color: #4ade80; /* Teks input warna hijau komputer matrix/retro */
+      font-family: monospace;
+      font-size: 20px;
       text-align: center;
       outline: none;
+      margin-bottom: 14px;
     }
 
     .modal-content button {
       width: 100%;
-      margin-top: 14px;
-      padding: 12px;
-      border: 3px solid #3b5e1e;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 18px;
+      padding: 10px;
+      border: 3px solid #000;
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      font-weight: bold;
       background: #5c8e32;
-      color: white;
-      box-shadow: inset -4px -4px 0px #3b5e1e;
+      color: #fff;
+      box-shadow: inset -3px -3px 0px #3b5e1e, inset 3px 3px 0px #82be4f;
+      cursor: pointer;
     }
-
     .modal-content button:hover { background: #4ade80; color: #000; }
+
     .close-btn {
       position: absolute;
-      top: 6px;
-      right: 14px;
+      top: 4px; right: 12px;
       font-size: 32px;
       cursor: pointer;
-      color: #4a3728;
-      font-weight: bold;
+      color: #555;
     }
-
-    /* =========================================
-       8. RESPONSIVE DESIGN
-    ========================================= */
-    @media (max-width: 720px) {
-      .sidebar { width: 100%; left: -100%; }
-    }
+    .close-btn:hover { color: #000; }
   </style>
 </head>
 
 <body>
 
-  <header class="mc-block">
+  <!-- TOP HEADER GUI -->
+  <header>
     <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <h2 class="pixel-font" style="font-size: 28px;">MoupeyStore</h2>
+    <div class="title-pixel">MoupeyStore</div>
     <div class="search-icon" onclick="alert('Fitur akan segera hadir!')">🔍</div>
   </header>
 
+  <!-- SIDEBAR MENU -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2 class="pixel-font">MENU</h2>
+      <h2 class="title-pixel" style="font-size:14px">OPTIONS</h2>
       <span class="close-sidebar" onclick="toggleSidebar()">×</span>
     </div>
     <ul class="nav-links">
@@ -282,85 +319,96 @@
     </ul>
   </nav>
 
-  <section class="profile">
-    <img src="image/pp.jpg" alt="Foto Profil" />
-    <p class="pixel-font">MoupeyStore</p>
-    <p class="info">🕒 Jam Operasional: 24 Jam | 15.00-00.00</p>
-    <p class="info">🤝 Anda Sopan Kami Segan</p>
-  </section>
-
-  <section class="link-list">
-    <a href="https://www.itemku.com/t/peppeyid?search_keyword=PeppeyID" class="link-item" target="_blank">
-      <img src="image/keranjang.png" />
-      <span class="pixel-font">Toko PeppeyID (Itemku) — Jelajahi Produk</span>
-    </a>
+  <!-- MAIN MENU CONTAINER -->
+  <main class="mc-container">
     
-    <a href="https://peppeystore.my.id/" class="link-item" target="_blank">
-      <img src="image/100.png" />
-      <span class="pixel-font">Web Resmi</span>
-    </a>
+    <!-- PROFILE BANNER -->
+    <section class="profile">
+      <div class="item-slot">
+        <img src="image/pp.jpg" alt="Foto Profil" />
+      </div>
+      <h1>MoupeyStore</h1>
+      <div class="info-box">🕒 Jam Kerja: 24 Jam | 15.00-00.00</div>
+      <div class="info-box" style="margin-top:4px; background:#e1b12c; color:#fff; border-color:#b38f1d;">🤝 Anda Sopan Kami Segan</div>
+    </section>
 
-    <a href="https://discord.gg/gdHFsyTdUD" class="link-item" target="_blank">
-      <img src="image/discord.png" />
-      <span class="pixel-font">Discord Noumui — Join Sekarang</span>
-    </a>
+    <!-- LIST ITEM LINKS (PUTIH, HIJAU, BIRU BLOCKS) -->
+    <section class="link-list">
+      <!-- Tombol Hijau (Store) -->
+      <a href="https://www.itemku.com/t/peppeyid?search_keyword=PeppeyID" class="link-item btn-green" target="_blank">
+        <img src="image/keranjang.png" />
+        <span>Toko PeppeyID (Itemku)</span>
+      </a>
+      
+      <!-- Tombol Biru (Web Resmi) -->
+      <a href="https://peppeystore.my.id/" class="link-item" target="_blank">
+        <img src="image/100.png" />
+        <span>Web Resmi Moupey</span>
+      </a>
 
-    <a href="Fix.html" class="link-item" target="_blank">
-      <img src="image/Gear.png" />
-      <span class="pixel-font">FIX MASALAH TIDAK BISA JOIN</span>
-    </a>
+      <!-- Tombol Biru (Discord) -->
+      <a href="https://discord.gg/gdHFsyTdUD" class="link-item" target="_blank">
+        <img src="image/discord.png" />
+        <span>Discord Noumui — Join</span>
+      </a>
 
-    <a href="https://wa.link/wcslln" class="link-item" target="_blank">
-      <img src="image/admin.png" />
-      <span class="pixel-font">Hubungi Admin</span>
-    </a>
+      <!-- Tombol Hijau (Fix Fitur) -->
+      <a href="Fix.html" class="link-item btn-green" target="_blank">
+        <img src="image/Gear.png" />
+        <span>FIX ERROR JOIN SERVER</span>
+      </a>
 
-    <a href="#" class="link-item" onclick="openModal(); return false;">
-      <img src="image/saluran.png" />
-      <span class="pixel-font">Saluran WA (Token Khusus)</span>
-    </a>
-  </section>
+      <!-- Tombol Biru (Admin) -->
+      <a href="https://wa.link/wcslln" class="link-item" target="_blank">
+        <img src="image/admin.png" />
+        <span>Hubungi Admin WA</span>
+      </a>
 
+      <!-- Tombol Token (Saluran WA) -->
+      <a href="#" class="link-item" onclick="openModal(); return false;" style="background:#6c5ce7; box-shadow: inset -3px -3px 0px #4834d4, inset 3px 3px 0px #a29bfe;">
+        <img src="image/saluran.png" />
+        <span>Saluran WA (Token Khusus)</span>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- MODAL SECURE TOKEN POP-UP -->
   <div id="tokenModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">×</span>
-      <h3 class="pixel-font">Masukkan Token Akses</h3>
-      <input type="password" id="tokenInput" placeholder="Token..." />
-      <button class="pixel-font" onclick="checkToken()">Masuk</button>
+      <h3>ENTER TOKEN</h3>
+      <input type="password" id="tokenInput" placeholder="_ _ _ _" maxlength="10" />
+      <button onclick="checkToken()">SUBMIT</button>
     </div>
   </div>
 
+  <!-- CORE CODE LOGIC (HIDDEN CRYPT) -->
   <script>
-    // Fungsi Buka-Tutup Sidebar
     function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("active");
     }
-
-    // Fungsi Buka-Tutup Modal
     function openModal() {
       document.getElementById("tokenModal").style.display = "flex";
-      document.getElementById("tokenInput").value = ""; // Kosongkan input saat dibuka
+      document.getElementById("tokenInput").focus();
     }
     function closeModal() {
       document.getElementById("tokenModal").style.display = "none";
+      document.getElementById("tokenInput").value = "";
     }
 
-    // Fungsi Validasi Token yang Disandikan (Obfuscated)
+    // Sistem Validasi Kunci Terenkripsi (Base64) - Aman dari intipan sekilas
     function checkToken() {
       const inputVal = document.getElementById("tokenInput").value.trim();
       
-      // Data yang sudah disandikan dengan Base64
-      // _0xK = Sandi untuk "1010"
-      // _0xL = Sandi untuk "https://www.whatsapp.com/channel/0029VbAoVI5Dp2QCayTfuY3p"
-      const _0xK = "MTAxMA=="; 
-      const _0xL = "aHR0cHM6Ly93d3cud2hhdHNhcHAuY29tL2NoYW5uZWwvMDAyOVZiQW9WSTVEcDJRQ2F5VGZ1WTNw";
+      const _0xM = "MTAxMA=="; // Hasil enkripsi teks "1010"
+      const _0xN = "aHR0cHM6Ly93d3cud2hhdHNhcHAuY29tL2NoYW5uZWwvMDAyOVZiQW9WSTVEcDJRQ2F5VGZ1WTNw"; // Kunci Link WA
 
-      // Mengubah input pengguna ke Base64 lalu dicocokkan dengan kunci rahasia
-      if (btoa(inputVal) === _0xK) {
-        // Jika benar, buka gembok link aslinya
-        window.location.href = atob(_0xL);
+      if (btoa(inputVal) === _0xM) {
+        window.location.href = atob(_0xN); // Buka link jika token "1010" sesuai
       } else {
-        alert("Token salah!");
+        alert("Token Invalid! Coba lagi.");
+        document.getElementById("tokenInput").value = "";
       }
     }
   </script>
