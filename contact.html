@@ -4,37 +4,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WebNeyo — Premium Link Hub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>WebNeyo — Premium Link Hub (Minecraft Edition)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* =========================================
+       1. MINECRAFT SYSTEM CORE & BG
+    ========================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      image-rendering: pixelated; /* Menjaga aset GIF/Gambar tetap tajam ala pixel art */
+    }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #d946ef 100%);
-      color: #fff;
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      /* Tema langit cerah siang hari Minecraft */
+      background: linear-gradient(180deg, #74b9ff 0%, #a29bfe 100%);
+      background-attachment: fixed;
+      color: #222;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       overflow-x: hidden;
     }
 
-    .glass {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    /* Font tebal 8-bit khusus judul utama */
+    .title-pixel {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      text-shadow: 2px 2px 0px #000;
+      color: #fff;
     }
 
-    /* SIDEBAR */
+    /* =========================================
+       2. REUSABLE GUI BLOCKS (3D Pixel Style)
+    ========================================= */
+    /* Kotak Menu Utama (Berada tepat di tengah) */
+    .mc-container {
+      width: 100%;
+      max-width: 520px;
+      background: #dbdbdb; /* Warna abu-abu panel inventory */
+      border: 4px solid #555555;
+      box-shadow: 
+        inset 4px 4px 0px #fff, 
+        inset -4px -4px 0px #8b8b8b, 
+        6px 6px 0px rgba(0, 0, 0, 0.15);
+      padding: 30px 24px;
+      margin: 50px auto;
+      text-align: center;
+      animation: fadeInPage 0.8s steps(4) ease-in-out; /* Transisi patah-patah khas game retro */
+    }
+
+    /* Slot Kotak pengunci Item Gambar */
+    .item-slot {
+      background: #8b8b8b;
+      border: 4px solid #373737;
+      box-shadow: inset 4px 4px 0px #555, inset -4px -4px 0px #dbdbdb;
+      display: inline-block;
+      padding: 6px;
+      margin-bottom: 10px;
+      animation: floating 3s infinite ease-in-out;
+    }
+
+    /* =========================================
+       3. TOP NAVIGATION HEADER
+    ========================================= */
+    header {
+      width: 100%;
+      max-width: 520px;
+      padding: 14px 20px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #3c81bc; /* Warna Biru Balok Diamond */
+      border: 4px solid #000;
+      box-shadow: inset -4px -4px 0px #244e74, inset 4px 4px 0px #6ba9df;
+      color: #fff;
+    }
+
+    header .menu-icon,
+    header .search-icon {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      cursor: pointer;
+      text-shadow: 2px 2px 0px #000;
+    }
+    header .menu-icon:hover { color: #a3ffb3; }
+
+    /* =========================================
+       4. SLIDE SIDEBAR MENU
+    ========================================= */
     .sidebar {
       position: fixed;
       left: -310px;
       top: 0;
-      width: 300px;
+      width: 260px;
       height: 100vh;
       padding: 22px;
-      transition: left .35s ease;
+      transition: .3s steps(4);
       z-index: 999;
+      background: #2c2c2c;
+      border-right: 6px solid #141414;
     }
 
     .sidebar.active { left: 0; }
@@ -44,112 +119,97 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
-    }
-
-    .sidebar h2 {
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .close-sidebar {
-      font-size: 26px;
-      cursor: pointer;
       color: #fff;
+      border-bottom: 4px solid #141414;
+      padding-bottom: 10px;
     }
+
+    .close-sidebar { font-size: 28px; cursor: pointer; }
 
     .nav-links {
-      list-style: none;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 10px;
+      list-style: none;
     }
 
     .nav-links a {
       color: #fff;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 17px;
-      font-weight: 500;
+      padding: 10px;
       text-decoration: none;
-      transition: .25s;
+      font-size: 22px;
+      background: #555;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px 0px #373737, inset 3px 3px 0px #8b8b8b;
+      display: block;
+      text-align: center;
     }
 
     .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateX(6px);
+      background: #5c8e32; /* Berganti warna hijau rumput */
+      box-shadow: inset -3px -3px 0px #3b5e1e, inset 3px 3px 0px #82be4f;
     }
 
-    /* HEADER */
-    header {
-      width: 100%;
-      padding: 16px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 800;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-    }
-
-    header .menu-icon,
-    header .search-icon {
-      font-size: 26px;
-      cursor: pointer;
-      transition: .25s;
-    }
-
-    /* ISI WEB TENGAH */
-    .center-content {
-      text-align: center;
-      margin-top: 90px;
-      padding: 20px;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
+    /* =========================================
+       5. CONTENT DETAILS & EFFECTS
+    ========================================= */
     .center-content img {
-      width: 180px;
-      height: 180px;
-      border-radius: 20px;
+      width: 150px;
+      height: 150px;
       object-fit: cover;
-      border: 3px solid #fff;
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
-      animation: floating 3s infinite ease-in-out;
+      display: block;
     }
 
+    /* Teks peringatan / error */
+    .simple-text {
+      margin-top: 20px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: #ff5555; /* Teks warna merah pekat system */
+      text-shadow: 2px 2px 0px #330000;
+      line-height: 1.5;
+    }
+
+    /* Tombol Kembali Tekstur Batuan Menjol (3D) */
+    .back-btn {
+      display: block;
+      width: 100%;
+      max-width: 240px;
+      margin: 25px auto 0;
+      padding: 12px;
+      background: #555;
+      color: #e0e0e0;
+      font-family: 'VT323', monospace;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 3px solid #000;
+      text-shadow: 2px 2px 0px #222;
+      box-shadow: inset -3px -3px 0px #373737, inset 3px 3px 0px #8b8b8b;
+    }
+
+    /* Hover effect menyala ungu muda game */
+    .back-btn:hover {
+      color: #fff;
+      border-color: #fff;
+      text-shadow: 2px 2px 0px #000;
+      background: #7ba4ff;
+      box-shadow: inset -3px -3px 0px #2e54b6, inset 3px 3px 0px #c1d5ff;
+    }
+
+    /* Jalur Animasi Bergerak */
     @keyframes floating {
       0% { transform: translateY(0px); }
-      50% { transform: translateY(-14px); }
+      50% { transform: translateY(-8px); }
       100% { transform: translateY(0px); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInPage {
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* TEKS ANIMASI */
-    .typing {
-      margin-top: 22px;
-      font-size: 22px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 0;
-      border-right: 3px solid #fff;
-      animation: typing 3s steps(30) forwards, blink .7s infinite;
-    }
-
-    @keyframes typing {
-      to { width: 280px; }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
-
-    @media (max-width:768px) {
+    @media (max-width: 768px) {
       .sidebar { width: 100%; left: -100%; }
     }
   </style>
@@ -157,106 +217,45 @@
 
 <body>
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar glass" id="sidebar">
+  <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>MENU</h2>
+      <h2 class="title-pixel" style="font-size: 12px;">OPTIONS</h2>
       <span class="close-sidebar" onclick="toggleSidebar()">×</span>
     </div>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="products.html">Produk</a></li>
-      <li><a href="premium.html">Premium List</a></li>
-      <li><a href="contact.html">Kontak</a></li>
-      <li><a href="https://www.itemku.com/t/peppeyid" target="_blank">Itemku Store</a></li>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="Fix.html">🛠️ Fix Eror</a></li>
+      <li><a href="premium.html">⭐ Premium List</a></li>
+      <li><a href="contact.html">☎️ Kontak</a></li>
+      <li><a href="https://www.itemku.com/t/peppeyid" target="_blank">🛒 Itemku Store</a></li>
     </ul>
   </nav>
 
-  <!-- HEADER -->
-  <header class="glass">
+  <header>
     <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <h1 style="font-size:22px">LINK NeyoStore</h1>
+    <h1 class="title-pixel">LINK NeyoStore</h1>
     <div class="search-icon" onclick="alert('Fitur akan segera hadir!')">🔍</div>
   </header>
 
-  <!-- ✨ ISI WEB TENGAH ✨ -->
-  <!-- ✨ ISI WEB TENGAH ✨ -->
-<!-- ✨ ISI WEB TENGAH ✨ -->
-<div class="center-content">
-  <img src="image/hsr-sparkle.gif" alt="Profile Roblox">
-  
-  <div class="simple-text">Maaf situs belum dijangkau</div>
+  <main class="mc-container">
+    <div class="center-content">
+      
+      <div class="item-slot">
+        <img src="image/hsr-sparkle.gif" alt="Profile Roblox">
+      </div>
+      
+      <div class="simple-text">Maaf situs belum dijangkau</div>
+      
+      <a href="index.html" class="back-btn">⬅ Kembali</a>
+      
+    </div>
+  </main>
 
-  <a href="index.html" class="back-btn">⬅ Kembali</a>
-</div>
-
-<style>
-  .center-content {
-    text-align: center;
-    margin-top: 90px;
-    padding: 20px;
-    animation: fadeInPage 1.2s ease-in-out;
-  }
-
-  .center-content img {
-    width: 180px;
-    height: 180px;
-    border-radius: 20px;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 0 26px rgba(255, 255, 255, 0.35);
-    animation: floating 3s infinite ease-in-out;
-  }
-
-  @keyframes floating {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-  }
-
-  @keyframes fadeInPage {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .simple-text {
-    margin-top: 18px;
-    font-size: 22px;
-    font-weight: 600;
-    opacity: 0;
-    animation: fadeInText 1.6s ease-out forwards;
-  }
-
-  @keyframes fadeInText {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ✨ TOMBOL KEMBALI ✨ */
-  .back-btn {
-    display: inline-block;
-    margin-top: 25px;
-    padding: 12px 26px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-    color: white;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 14px;
-    text-decoration: none;
-    transition: .3s ease;
-    animation: fadeInText 2s ease-out forwards;
-  }
-
-  .back-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: scale(1.05);
-  }
-</style>
-
-
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+  </script>
 
 </body>
-
 </html>
